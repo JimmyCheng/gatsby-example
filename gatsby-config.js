@@ -1,10 +1,45 @@
 const path = require("path")
+const config = require("./config/website")
+
+require("dotenv").config({
+  path: `.env.${process.env.NODE_ENV}`,
+})
+
+const {
+  NODE_ENV,
+  URL: NETLIFY_SITE_URL = config.siteUrl,
+  DEPLOY_PRIME_URL: NETLIFY_DEPLOY_URL = NETLIFY_SITE_URL,
+  CONTEXT: NETLIFY_ENV = NODE_ENV,
+} = process.env
+const isNetlifyProduction = NETLIFY_ENV === "production"
+const siteUrl = isNetlifyProduction ? NETLIFY_SITE_URL : NETLIFY_DEPLOY_URL
 
 module.exports = {
   siteMetadata: {
-    title: `My Personal Blog`,
-    description: `This website is powered by Gatsby. Gatsby uses React+GraphQL to build the most advanced dynamic website.`,
-    author: `@gatsbyjs`,
+    siteUrl,
+    title: config.siteTitle,
+    twitterHandle: config.twitterHandle,
+    description: config.siteDescription,
+    keywords: [
+      "Software Engineer",
+      "React Training",
+      "Testing JavaScript Training",
+    ],
+    canonicalUrl: siteUrl,
+    image: config.siteLogo,
+    author: {
+      name: config.author,
+      minibio: config.minibio,
+    },
+    organization: {
+      name: config.organization,
+      url: siteUrl,
+      logo: config.siteLogo,
+    },
+    social: {
+      twitter: config.twitterHandle,
+      fbAppID: "",
+    },
   },
   plugins: [
     {
